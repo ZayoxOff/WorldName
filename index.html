@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devine le Drapeau</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+        :root{--p:#6366f1;--s:#818cf8;--bg:#f3f4f6;--c:#ffffff;--t:#1f2937;--e:#10b981;--r:#ef4444;}
+        body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--t);display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0;padding:10px;}
+        .g{background:var(--c);width:100%;max-width:480px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.1);overflow:hidden;position:relative;transition:transform .2s;}
+        h,h1{margin:0;text-align:center;}
+        h1{padding:20px;background:var(--p);color:var(--c);font-size:1.5rem;}
+        .d{text-align:center;padding:5px 20px;font-size:.9rem;color:#e0e7ff;}
+        .s{padding:30px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;min-height:380px;justify-content:center;}
+        .hd{display:none !important;}
+        b{background:var(--p);color:var(--c);border:none;padding:12px 30px;font-size:1rem;font-weight:700;border-radius:50px;cursor:pointer;margin-top:15px;transition:.2s;outline:none;box-shadow:0 4px 6px rgba(99,102,241,0.3);}
+        b:hover{background:var(--s);transform:translateY(-2px);}
+        i{width:100%;max-width:280px;height:180px;background:#f9fafb;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;box-shadow:inset 0 2px 4px rgba(0,0,0,0.05);overflow:hidden;}
+        img{max-width:90%;max-height:90%;object-fit:contain;animation:p .4s cubic-bezier(0.175,0.885,0.32,1.275);}
+        @keyframes p{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
+        input{width:100%;padding:15px;border:2px solid #e5e7eb;border-radius:12px;font-size:1.1rem;text-align:center;margin-bottom:15px;outline:none;font-family:inherit;transition:.2s;}
+        input:focus{border-color:var(--p);}
+        .m{width:100%;padding:10px;border-radius:8px;margin-top:10px;font-weight:600;opacity:0;transform:translateY(10px);transition:.3s;}
+        .m.v{opacity:1;transform:translateY(0);}
+        .m.ok{color:var(--e);background:#d1fae5;}
+        .m.no{color:var(--r);background:#fee2e2;}
+        .n{opacity:0;pointer-events:none;transition:.2s;background:#374151;}
+        .n.v{opacity:1;pointer-events:auto;}
+    </style>
+</head>
+<body>
+<div class="g">
+    <h1>🌏 Drapeaux du Monde</h1>
+    <div class="d" id="sc">Score : 0</div>
+    <div id="h" class="s">
+        <h>Prêt à jouer ?</h>
+        <p style="color:#6b7280;margin:20px 0;">Devine le pays de chaque drapeau.</p>
+        <b onclick="G.s()">Commencer</b>
+    </div>
+    <div id="p" class="s hd">
+        <i><img id="f" src="" alt="flag"></i>
+        <input type="text" id="a" placeholder="Nom du pays..." autocomplete="off">
+        <b id="v" onclick="G.c()">Valider</b>
+        <div id="m" class="m"></div>
+        <b id="x" class="n" onclick="G.n()">Suivant</b>
+    </div>
+</div>
+<script>
+!function(){'use strict';
+const D=[{n:"Afghanistan",c:"af"},{n:"Afrique du Sud",c:"za"},{n:"Albanie",c:"al"},{n:"Algérie",c:"dz"},{n:"Allemagne",c:"de"},{n:"Andorre",c:"ad"},{n:"Angola",c:"ao"},{n:"Antigua-et-Barbuda",c:"ag"},{n:"Arabie Saoudite",c:"sa"},{n:"Argentine",c:"ar"},{n:"Arménie",c:"am"},{n:"Australie",c:"au"},{n:"Autriche",c:"at"},{n:"Azerbaïdjan",c:"az"},{n:"Bahamas",c:"bs"},{n:"Bahreïn",c:"bh"},{n:"Bangladesh",c:"bd"},{n:"Barbade",c:"bb"},{n:"Belgique",c:"be"},{n:"Belize",c:"bz"},{n:"Bénin",c:"bj"},{n:"Bhoutan",c:"bt"},{n:"Biélorussie",c:"by"},{n:"Birmanie (Myanmar)",c:"mm"},{n:"Bolivie",c:"bo"},{n:"Bosnie-Herzégovine",c:"ba"},{n:"Botswana",c:"bw"},{n:"Brésil",c:"br"},{n:"Brunei",c:"bn"},{n:"Bulgarie",c:"bg"},{n:"Burkina Faso",c:"bf"},{n:"Burundi",c:"bi"},{n:"Cambodge",c:"kh"},{n:"Cameroun",c:"cm"},{n:"Canada",c:"ca"},{n:"Cap-Vert",c:"cv"},{n:"Chili",c:"cl"},{n:"Chine",c:"cn"},{n:"Chypre",c:"cy"},{n:"Colombie",c:"co"},{n:"Comores",c:"km"},{n:"Congo (Brazzaville)",c:"cg"},{n:"Congo (Kinshasa)",c:"cd"},{n:"Corée du Nord",c:"kp"},{n:"Corée du Sud",c:"kr"},{n:"Costa Rica",c:"cr"},{n:"Côte d’Ivoire",c:"ci"},{n:"Croatie",c:"hr"},{n:"Cuba",c:"cu"},{n:"Danemark",c:"dk"},{n:"Djibouti",c:"dj"},{n:"Dominique",c:"dm"},{n:"Égypte",c:"eg"},{n:"Émirats arabes unis",c:"ae"},{n:"Équateur",c:"ec"},{n:"Érythrée",c:"er"},{n:"Espagne",c:"es"},{n:"Estonie",c:"ee"},{n:"Eswatini",c:"sz"},{n:"États-Unis",c:"us"},{n:"Éthiopie",c:"et"},{n:"Fidji",c:"fj"},{n:"Finlande",c:"fi"},{n:"France",c:"fr"},{n:"Gabon",c:"ga"},{n:"Gambie",c:"gm"},{n:"Géorgie",c:"ge"},{n:"Ghana",c:"gh"},{n:"Grèce",c:"gr"},{n:"Grenade",c:"gd"},{n:"Guatemala",c:"gt"},{n:"Guinée",c:"gn"},{n:"Guinée-Bissau",c:"gw"},{n:"Guinée équatoriale",c:"gq"},{n:"Guyana",c:"gy"},{n:"Haïti",c:"ht"},{n:"Honduras",c:"hn"},{n:"Hongrie",c:"hu"},{n:"Îles Cook",c:"ck"},{n:"Îles Marshall",c:"mh"},{n:"Inde",c:"in"},{n:"Indonésie",c:"id"},{n:"Irak",c:"iq"},{n:"Iran",c:"ir"},{n:"Irlande",c:"ie"},{n:"Islande",c:"is"},{n:"Israël",c:"il"},{n:"Italie",c:"it"},{n:"Jamaïque",c:"jm"},{n:"Japon",c:"jp"},{n:"Jordanie",c:"jo"},{n:"Kazakhstan",c:"kz"},{n:"Kenya",c:"ke"},{n:"Kirghizistan",c:"kg"},{n:"Kiribati",c:"ki"},{n:"Kosovo",c:"xk"},{n:"Koweït",c:"kw"},{n:"Laos",c:"la"},{n:"Lesotho",c:"ls"},{n:"Lettonie",c:"lv"},{n:"Liban",c:"lb"},{n:"Liberia",c:"lr"},{n:"Libye",c:"ly"},{n:"Liechtenstein",c:"li"},{n:"Lituanie",c:"lt"},{n:"Luxembourg",c:"lu"},{n:"Macédoine du Nord",c:"mk"},{n:"Madagascar",c:"mg"},{n:"Malaisie",c:"my"},{n:"Malawi",c:"mw"},{n:"Maldives",c:"mv"},{n:"Mali",c:"ml"},{n:"Malte",c:"mt"},{n:"Maroc",c:"ma"},{n:"Maurice",c:"mu"},{n:"Mauritanie",c:"mr"},{n:"Mexique",c:"mx"},{n:"Micronésie",c:"fm"},{n:"Moldavie",c:"md"},{n:"Monaco",c:"mc"},{n:"Mongolie",c:"mn"},{n:"Monténégro",c:"me"},{n:"Mozambique",c:"mz"},{n:"Namibie",c:"na"},{n:"Nauru",c:"nr"},{n:"Népal",c:"np"},{n:"Nicaragua",c:"ni"},{n:"Niger",c:"ne"},{n:"Nigéria",c:"ng"},{n:"Norvège",c:"no"},{n:"Nouvelle-Zélande",c:"nz"},{n:"Oman",c:"om"},{n:"Ouganda",c:"ug"},{n:"Ouzbékistan",c:"uz"},{n:"Pakistan",c:"pk"},{n:"Palaos",c:"pw"},{n:"Palestine",c:"ps"},{n:"Panama",c:"pa"},{n:"Papouasie-Nouvelle-Guinée",c:"pg"},{n:"Paraguay",c:"py"},{n:"Pays-Bas",c:"nl"},{n:"Pérou",c:"pe"},{n:"Philippines",c:"ph"},{n:"Pologne",c:"pl"},{n:"Portugal",c:"pt"},{n:"Qatar",c:"qa"},{n:"République centrafricaine",c:"cf"},{n:"République dominicaine",c:"do"},{n:"République tchèque",c:"cz"},{n:"Roumanie",c:"ro"},{n:"Royaume-Uni",c:"gb"},{n:"Russie",c:"ru"},{n:"Rwanda",c:"rw"},{n:"Saint-Kitts-et-Nevis",c:"kn"},{n:"Saint-Marin",c:"sm"},{n:"Saint-Vincent-et-les-Grenadines",c:"vc"},{n:"Sainte-Lucie",c:"lc"},{n:"Salomon",c:"sb"},{n:"Salvador",c:"sv"},{n:"Samoa",c:"ws"},{n:"Sao Tomé-et-Principe",c:"st"},{n:"Sénégal",c:"sn"},{n:"Serbie",c:"rs"},{n:"Seychelles",c:"sc"},{n:"Sierra Leone",c:"sl"},{n:"Singapour",c:"sg"},{n:"Slovaquie",c:"sk"},{n:"Slovénie",c:"si"},{n:"Somalie",c:"so"},{n:"Soudan",c:"sd"},{n:"Soudan du Sud",c:"ss"},{n:"Sri Lanka",c:"lk"},{n:"Suède",c:"se"},{n:"Suisse",c:"ch"},{n:"Suriname",c:"sr"},{n:"Syrie",c:"sy"},{n:"Tadjikistan",c:"tj"},{n:"Tanzanie",c:"tz"},{n:"Tchad",c:"td"},{n:"Thaïlande",c:"th"},{n:"Timor oriental",c:"tl"},{n:"Togo",c:"tg"},{n:"Tonga",c:"to"},{n:"Trinité-et-Tobago",c:"tt"},{n:"Tunisie",c:"tn"},{n:"Turkménistan",c:"tm"},{n:"Turquie",c:"tr"},{n:"Tuvalu",c:"tv"},{n:"Ukraine",c:"ua"},{n:"Uruguay",c:"uy"},{n:"Vanuatu",c:"vu"},{n:"Vatican",c:"va"},{n:"Venezuela",c:"ve"},{n:"Viêt Nam",c:"vn"},{n:"Yémen",c:"ye"},{n:"Zambie",c:"zm"},{n:"Zimbabwe",c:"zw"}];
+let u=0,w=null,z=false;
+const E=(id)=>document.getElementById(id);
+const R=(s)=>s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim();
+window.G={
+s:()=>{u=0;E("sc").innerText="Score : 0";E("h").classList.add("hd");E("p").classList.remove("hd");G.n();},
+n:()=>{z=false;let r=Math.floor(Math.random()*D.length);while(D.length>1&&w&&r===w)r=Math.floor(Math.random()*D.length);w=r;let c=D[w];E("f").style.opacity=0;E("f").src="https://flagcdn.com/w640/"+c.c+".png";E("f").onload=()=>{E("f").style.opacity=1;};E("a").value="";E("a").disabled=false;E("v").style.display="inline-block";let m=E("m");m.className="m";m.innerHTML="";E("x").classList.remove("v");E("a").focus();},
+c:()=>{if(z)return;let v=E("a").value.trim();if(!v)return;z=true;E("a").disabled=true;E("v").style.display="none";let c=D[w];let i=R(v),o=R(c.n);let m=E("m");m.classList.add("v");if(i===o){u++;E("sc").innerText="Score : "+u;m.innerText="Bravo !";m.classList.add("ok");}else{m.innerHTML="Faux ! C'était <strong>"+c.n+"</strong>.";m.classList.add("no");E("p").classList.add("shake");setTimeout(()=>E("p").classList.remove("shake"),500);}E("x").classList.add("v");E("x").focus();}
+};
+E("a").addEventListener("keypress",e=>{if(e.key==="Enter")G.x.classList.contains("v")?G.n():G.c();});
+}();
+</script>
+</body>
+</html>
